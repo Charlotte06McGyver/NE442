@@ -1,32 +1,25 @@
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 
-public class PingPong {
+public class Multiplication {
+	
 	public static void main(String[] args) throws Exception
     {
-        PingPong partie = new PingPong();
+        Multiplication partie = new Multiplication();
         partie.execute();
 
     }
-
-
-    /**
-     * Le client cree une socket, envoie un message au serveur
-     * et attend la reponse 
-     * 
-     */
-    private void execute() throws IOException
-    {
+	
+	private void execute() throws IOException{
         //Début de la partie
         System.out.println("Demarrage de la partie ...");
 
         //Creation de la socket
         DatagramSocket socket = new DatagramSocket();
-    	InetSocketAddress adrDest = new InetSocketAddress("localhost", 29000);
-     
+    	InetSocketAddress adrDest = new InetSocketAddress("localhost", 11000);
+    	
         for (int i=1; i<11; i++) {
         	// Creation et envoi du message
         	System.out.println("====================================");
@@ -36,39 +29,36 @@ public class PingPong {
         	socket.send(dpE);
         	String envoi = new String(bufE, dpE.getOffset(), dpE.getLength());
         	System.out.println("Envoi d'un paquet UDP avec "+envoi);
-
-        	// Attente de la reponse 
-        	byte[] bufR = new byte[2048];
-        	DatagramPacket dpR = new DatagramPacket(bufR, bufR.length);
-        	socket.receive(dpR);
-        	String reponse = new String(bufR, dpR.getOffset(), dpR.getLength());
-        	System.out.println("Le serveur a repondu "+reponse);
         	
-        	//Préparation du message à renvoyer au serveur
-        	byte[] bufM = new String("PING").getBytes();
+        	// Attente des 2 reponses 
+        	byte[] bufR1 = new byte[2048]; //reponse 1
+        	DatagramPacket dpR1 = new DatagramPacket(bufR1, bufR1.length);
+        	socket.receive(dpR1);
+        	String operande1 = new String(bufR1, dpR1.getOffset(), dpR1.getLength());
+        	int x1 = Integer.parseInt(operande1.substring(0,1));
+        	byte[] bufR2 = new byte[2048]; //reponse 2
+        	DatagramPacket dpR2 = new DatagramPacket(bufR2, bufR2.length);
+        	socket.receive(dpR2);
+        	String operande2 = new String(bufR2, dpR2.getOffset(), dpR2.getLength());
+        	int x2 = Integer.parseInt(operande2.substring(0,1)); //car il y a 2 messages envoyés
+        	System.out.println("Le serveur a repondu "+x1+" et "+x2);
         	
-        	if (reponse.equals("PING")) {
-        		bufM = new String("PONG").getBytes();
-        	}
-      
+        	//Préparation de la réponse
+        	int result = x1 * x2;
+        	byte[] bufM = new String(result+";").getBytes();
         	//Envoi du message au serveur
         	DatagramPacket dpM = new DatagramPacket(bufM, bufM.length, adrDest);
         	socket.send(dpM);
         	String message = new String(bufM, dpM.getOffset(), dpM.getLength());
         	System.out.println("Envoi d'un paquet UDP avec "+message);
         	
-        	// Attente de la reponse 
-        	byte[] bufR2 = new byte[2048];
-        	DatagramPacket dpR2 = new DatagramPacket(bufR2, bufR2.length);
-        	socket.receive(dpR2);
-        	String reponse2 = new String(bufR2, dpR2.getOffset(), dpR2.getLength());
+        	// Attente de la reponse du gain
+        	byte[] bufG = new byte[2048];
+        	DatagramPacket dpG = new DatagramPacket(bufG, bufG.length);
+        	socket.receive(dpG);
+        	String reponse2 = new String(bufG, dpG.getOffset(), dpG.getLength());
         	System.out.println("Le serveur a repondu "+reponse2);
         	System.out.println("Fin de la partie "+i);
-        	
         }
-
-        // Fermeture de la socket
-        socket.close();
-        System.out.println("Partie terminee");
-    }
+	}
 }
