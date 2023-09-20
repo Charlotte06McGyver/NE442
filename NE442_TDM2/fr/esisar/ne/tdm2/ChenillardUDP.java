@@ -5,40 +5,44 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
-
+import java.awt.Color;
 import javax.swing.JFrame;
 
-public class PingPongColor2 {
+public class ChenillardUDP {
 	
     public static void main(String[] args) throws Exception
     {
-        PingPongColor2 p2 = new PingPongColor2();
-        p2.execute();
+        ChenillardUDP ch = new ChenillardUDP();
+        ch.execute(args[0], args[1], args[2]);
     }
-
-    private void execute() throws Exception {
-	//
-    System.out.println("Demarrage du programme 2 ...");
-
-    // Le serveur se declare aupres de la couche transport
-    // sur le port 4002
-    DatagramSocket socket = new DatagramSocket(null);
-    socket.bind(new InetSocketAddress(4002));
-	InetSocketAddress adrDest = new InetSocketAddress("localhost", 4001);
     
-    //Ouverture d'une nouvelle fenetre
-    JFrame frame = new JFrame("Pong");
-    frame.setSize(400,400);
-	//Affichage de la fenetre en vert
-	frame.getContentPane().setBackground(Color.GREEN);
-	frame.setVisible(true);
-	
-	boolean end = true;
-	
-	
-    while (end) {
-
-    	// Attente de la reponse 
+    private void execute(String portSrc, String portDest, String color) throws Exception {
+    	//
+        System.out.println("Demarrage du chenillard ...");
+        
+        //Ouverture d'une nouvelle fenetre
+        JFrame frame = new JFrame("Chenillard");
+        frame.setSize(300,300);
+        
+        if (color.equals("red")) {
+        	//Affichage de la fenetre en rouge
+        	frame.getContentPane().setBackground(Color.RED);
+        	frame.setVisible(true); 
+        }
+        
+        else if (color.equals("green")) {
+        	//Affichage de la fenetre en vert
+        	frame.getContentPane().setBackground(Color.GREEN);
+        	frame.setVisible(true); 
+        }
+        
+        // Le serveur se declare aupres de la couche transport
+        // sur le port portSrc
+        DatagramSocket socket = new DatagramSocket(null);
+        socket.bind(new InetSocketAddress(4002));
+    	InetSocketAddress adrDest = new InetSocketAddress("localhost", 4001);
+        
+        // Attente de la reponse 
     	byte[] bufR = new byte[2048];
     	DatagramPacket dpR = new DatagramPacket(bufR, bufR.length);
     	socket.receive(dpR);
@@ -61,15 +65,9 @@ public class PingPongColor2 {
     	socket.send(dpE);
     	String envoi = new String(bufE, dpE.getOffset(), dpE.getLength());
     	System.out.println("Envoi d'un paquet UDP avec "+envoi);
-	    
-    
-	}
-    //Fermeture de la fenetre
-    frame.dispose();
-    // Fermeture de la socket
-    socket.close();
-    System.out.println("Arret du serveur .");
-    
+        
+        
+
     }
 
 }
