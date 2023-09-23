@@ -11,27 +11,23 @@ public class ClientChenillard {
     {
         ClientChenillard cl = new ClientChenillard();
         //Pour avoir le bon nombre d'arguments
-        if(args.length!= 3) {
-            System.out.println("Usage: <adresse> <port> <start>");
+        if(args.length!= 1) {
+            System.out.println("Usage: <start>");
         }else {
-            cl.execute(args[0],args[1],args[2]);
+            cl.execute(args[0]);
         }
     }
     
-    private void execute(String Addr, String port, String dernier) throws Exception {
+    private void execute(String dernier) throws Exception {
     	//
-        System.out.println("Demarrage du chenillard ...");
-        int Port= Integer.parseInt(port);
-        //On déclare que 1 est le dernier
-        int der = Integer.parseInt(dernier);
+        System.out.println("Demarrage du client chenillard ...");
 	    
         // Le client se declare aupres de la couche transport
-        // sur le port portSrc
+        // sur le port port (3000 est le port du serveur)
         DatagramSocket socket = new DatagramSocket(null);
-        socket.bind(new InetSocketAddress(Port));
     	InetSocketAddress adrDest = new InetSocketAddress("localhost", 3000);
 
-    	byte[] bufE = new String(Addr +" " + port +" " + dernier).getBytes();
+    	byte[] bufE = new String(dernier).getBytes();
     	byte[] bufR = new byte[2048];
 
 	//Connexion au serveur
@@ -57,10 +53,6 @@ public class ClientChenillard {
         		//Affichage de la fenetre en vert
         		frame.getContentPane().setBackground(Color.GREEN);
         		frame.setVisible(true); 
-		}
-    	
-    	
-    	
-    }
-	
+		}	
+    }	
 }
