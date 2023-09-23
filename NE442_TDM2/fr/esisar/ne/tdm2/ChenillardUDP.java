@@ -1,6 +1,3 @@
-package fr.esisar.ne.tdm2;
-
-import java.awt.Color;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -19,17 +16,17 @@ public class ChenillardUDP {
     private void execute(String portSrc, String portDest, String color) throws Exception {
     	//
         System.out.println("Demarrage du chenillard ...");
-	int Port_src= Integer.parseInt(portSrc);
-	int Port_dest = Integer.parseInt(portDest);
+        int Port_src= Integer.parseInt(portSrc);
+        int Port_dest = Integer.parseInt(portDest);
 	    
-	// Le serveur se declare aupres de la couche transport
+        // Le serveur se declare aupres de la couche transport
         // sur le port portSrc
         DatagramSocket socket = new DatagramSocket(null);
         socket.bind(new InetSocketAddress(Port_src));
-    	InetSocketAddress adrDest = new InetSocketAddress("localhost", Port_Dest);
+    	InetSocketAddress adrDest = new InetSocketAddress("localhost", Port_dest);
 
-	byte[] bufE = new String("red").getBytes();
-	byte[] bufR = new byte[2048];
+    	byte[] bufE = new String("red").getBytes();
+    	byte[] bufR = new byte[2048];
 
 	    
         //Ouverture d'une nouvelle fenetre
@@ -83,11 +80,9 @@ public class ChenillardUDP {
     			socket.send(dpE);
     			String envoi = new String(bufE, dpE.getOffset(), dpE.getLength());
     			System.out.println("Envoi d'un paquet UDP avec "+envoi);
-
 			
         	}
 	}
 
-    }
-
 }
+
