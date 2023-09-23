@@ -19,54 +19,74 @@ public class ChenillardUDP {
     private void execute(String portSrc, String portDest, String color) throws Exception {
     	//
         System.out.println("Demarrage du chenillard ...");
-        
+	int Port_src= Integer.parseInt(portSrc);
+	int Port_dest = Integer.parseInt(portDest);
+	    
+	// Le serveur se declare aupres de la couche transport
+        // sur le port portSrc
+        DatagramSocket socket = new DatagramSocket(null);
+        socket.bind(new InetSocketAddress(Port_src));
+    	InetSocketAddress adrDest = new InetSocketAddress("localhost", Port_Dest);
+
+	byte[] bufE = new String("red").getBytes();
+	byte[] bufR = new byte[2048];
+
+	    
         //Ouverture d'une nouvelle fenetre
         JFrame frame = new JFrame("Chenillard");
         frame.setSize(300,300);
+
+	while (true){
+		
+		if (color.equals("red")) {
+        		//Affichage de la fenetre en rouge
+        		frame.getContentPane().setBackground(Color.RED);
+        		frame.setVisible(true); 
+			Thread.sleep(1000);
+
+			// Creation et envoi du message
+    			DatagramPacket dpE = new DatagramPacket(bufE, bufE.length, adrDest);
+    			socket.send(dpE);
+    			String envoi = new String(bufE, dpE.getOffset(), dpE.getLength());
+    			System.out.println("Envoi d'un paquet UDP avec "+envoi);
+
+			//Passage au vert
+        		frame.getContentPane().setBackground(Color.GREEN);
+        		frame.setVisible(true);
+
+			//Attente de la réponse
+			DatagramPacket dpR = new DatagramPacket(bufR, bufR.length);
+    			socket.receive(dpR);
+    			String reponse = new String(bufR, dpR.getOffset(), dpR.getLength());
+    			System.out.println("Le serveur a repondu "+reponse);				
+        	}
         
-        if (color.equals("red")) {
-        	//Affichage de la fenetre en rouge
-        	frame.getContentPane().setBackground(Color.RED);
-        	frame.setVisible(true); 
-        }
-        
-        else if (color.equals("green")) {
-        	//Affichage de la fenetre en vert
-        	frame.getContentPane().setBackground(Color.GREEN);
-        	frame.setVisible(true); 
-        }
-        
-        // Le serveur se declare aupres de la couche transport
-        // sur le port portSrc
-        DatagramSocket socket = new DatagramSocket(null);
-        socket.bind(new InetSocketAddress(4002));
-    	InetSocketAddress adrDest = new InetSocketAddress("localhost", 4001);
-        
-        // Attente de la reponse 
-    	byte[] bufR = new byte[2048];
-    	DatagramPacket dpR = new DatagramPacket(bufR, bufR.length);
-    	socket.receive(dpR);
-    	String reponse = new String(bufR, dpR.getOffset(), dpR.getLength());
-    	System.out.println("Le serveur a repondu "+reponse);
-    	
-    	if (reponse.equals("red")) {
-    		frame.getContentPane().setBackground(Color.RED);
-    		frame.setVisible(true);
-    	}
-    	
-    	Thread.sleep(1000); //attendre un moment
-    	//Affichage de la fenetre en vert
-    	frame.getContentPane().setBackground(Color.GREEN);
-    	frame.setVisible(true);  
-    
-    	// Creation et envoi du message
-    	byte[] bufE = new String("red").getBytes();
-    	DatagramPacket dpE = new DatagramPacket(bufE, bufE.length, adrDest);
-    	socket.send(dpE);
-    	String envoi = new String(bufE, dpE.getOffset(), dpE.getLength());
-    	System.out.println("Envoi d'un paquet UDP avec "+envoi);
-        
-        
+        	else if (color.equals("green")) {
+			
+        		//Affichage de la fenetre en vert
+        		frame.getContentPane().setBackground(Color.GREEN);
+        		frame.setVisible(true); 
+
+			// Attente de la reponse 
+    			DatagramPacket dpR = new DatagramPacket(bufR, bufR.length);
+    			socket.receive(dpR);
+    			String reponse = new String(bufR, dpR.getOffset(), dpR.getLength());
+    			System.out.println("Le serveur a repondu "+reponse);
+
+			//Affichage de la fenetre en rouge
+        		frame.getContentPane().setBackground(Color.RED);
+        		frame.setVisible(true); 
+			Thread.sleep(1000);
+
+			// Creation et envoi du message
+    			DatagramPacket dpE = new DatagramPacket(bufE, bufE.length, adrDest);
+    			socket.send(dpE);
+    			String envoi = new String(bufE, dpE.getOffset(), dpE.getLength());
+    			System.out.println("Envoi d'un paquet UDP avec "+envoi);
+
+			
+        	}
+	}
 
     }
 
