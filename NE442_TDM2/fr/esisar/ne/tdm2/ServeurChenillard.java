@@ -12,7 +12,7 @@ public class ServeurChenillard {
      s.execute();
    }
 
-  private void execute(String dernier) throws Exception {
+  private void execute(String dernier) throws IOException {
     //
     System.out.println("Demarrage du serveur chenillard ...");
     
