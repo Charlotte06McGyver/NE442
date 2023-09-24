@@ -1,4 +1,4 @@
-package fr.esisar.ne.tdm2;
+//package fr.esisar.ne.tdm2;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -16,7 +16,7 @@ public class PingPongColor2 {
         p2.execute();
     }
 
-    private void execute() throws Exception {
+    private void execute() throws IOException, InterruptedException {
 	//
     System.out.println("Demarrage du programme 2 ...");
 

@@ -29,30 +29,34 @@ public class ClientChenillard {
 
     	byte[] bufE = new String(dernier).getBytes();
     	byte[] bufR = new byte[2048];
+    	
+        //Ouverture d'une nouvelle fenetre
+        JFrame frame = new JFrame("Client_Chenillard");
+        frame.setSize(300,300);
 
-	//Connexion au serveur
+    	//Connexion au serveur
     	DatagramPacket dpE = new DatagramPacket(bufE, bufE.length, adrDest);
     	socket.send(dpE);
     	String envoi = new String(bufE, dpE.getOffset(), dpE.getLength());
     	System.out.println("Envoi d'un paquet UDP avec "+envoi);
 
-	while(true){
-
-		//Attente de la réponse
-		DatagramPacket dpR = new DatagramPacket(bufR, bufR.length);
+    	while(true){
+    		//Attente de la réponse
+    		DatagramPacket dpR = new DatagramPacket(bufR, bufR.length);
     		socket.receive(dpR);
     		String reponse = new String(bufR, dpR.getOffset(), dpR.getLength());
     		System.out.println("Le serveur a repondu "+reponse);	
 
-		if (color.equals("red")) {
-        		//Affichage de la fenetre en rouge
-        		frame.getContentPane().setBackground(Color.RED);
-        		frame.setVisible(true); 
-		}
-		else if (color.equals("green")) {	
-        		//Affichage de la fenetre en vert
-        		frame.getContentPane().setBackground(Color.GREEN);
-        		frame.setVisible(true); 
-		}	
+    		if (reponse.equals("red")) {
+    			//Affichage de la fenetre en rouge
+    			frame.getContentPane().setBackground(Color.RED);
+    			frame.setVisible(true); 
+    		}
+    		else if (reponse.equals("green")) {	
+    			//Affichage de la fenetre en vert
+    			frame.getContentPane().setBackground(Color.GREEN);
+    			frame.setVisible(true); 
+    		}	
+    	}	
     }	
 }
