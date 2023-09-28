@@ -69,20 +69,31 @@ public class AdditionTCP
         			question += new String(bufR, 0 , lenBufR );
         		}
         		
-        		calcul = question.substring(0, question.indexOf("?")+1);
-        		bufCalInc = question.substring(question.indexOf("?")+1);
-        		
-              		
-        		System.out.println("Question: "+calcul);
-        		
-        		addition = Calcul(calcul);
-        		
-        		byte[] bufM = new String(addition +";").getBytes();
-    			
-            
-        		//Envoi de la reponse
-        		OutputStream os = socket.getOutputStream();
-        		os.write(bufM);
+        		//Si on a plusieurs equations dans la question, on les traite toutes sans avoir besoin 
+        		//d'avoir un nouveau message du serveur
+        		while (question.contains("?")){
+        			
+        			//on récupère le premier calcul à effectuer
+            		calcul = question.substring(0, question.indexOf("?")+1);
+            		//on récupère la fin de la question, qui contient peut-être des bouts incomplets
+            		bufCalInc = question.substring(question.indexOf("?")+1);
+            		//on enlève la question que l'on vient de traiter pour voir ensuite s'il y a une autre question complète à traiter
+            		question = question.substring(question.indexOf("?")+1);
+            		
+                  		
+            		System.out.println("Question: "+calcul);
+            		
+            		//On effectue le calcul grace àa la fonction codée ci après
+            		addition = Calcul(calcul);
+            		
+            		byte[] bufM = new String(addition +";").getBytes();
+        			
+                
+            		//Envoi de la reponse
+            		OutputStream os = socket.getOutputStream();
+            		os.write(bufM);
+            		
+        		}
         		
         		lenBufR = is.read(bufR);
         	}
