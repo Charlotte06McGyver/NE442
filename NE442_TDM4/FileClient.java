@@ -16,7 +16,11 @@ public class FileClient
     public static void main(String[] args) throws Exception
     {
         FileClient fc = new FileClient();
-        fc.execute();                
+        if(args.length!= 1) {
+            System.out.println("Usage: <file>");
+        }else {
+            fc.execute(args[0]);
+        }                
     }
 
     /**
@@ -24,7 +28,7 @@ public class FileClient
      * et attend la reponse 
      * 
      */
-    private void execute() throws IOException
+    private void execute(String file) throws IOException
     {
         //
         System.out.println("Demarrage du client ...");
@@ -34,7 +38,13 @@ public class FileClient
 
         // Connexion au serveur 
         InetSocketAddress adrDest = new InetSocketAddress("127.0.0.1", 3000);
-        socket.connect(adrDest);     
+        socket.connect(adrDest);  
+        
+        // Envoi de la requete (variante exercice 6)
+        byte[] bufE = file.getBytes();
+        OutputStream os = socket.getOutputStream();
+        os.write(bufE);
+        System.out.println("Fichier demandé : "+file);
         
         long start = System.currentTimeMillis();
 
