@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +24,7 @@ public class FileServeur {
 		socketEcoute.bind(new InetSocketAddress(3000));
 		
 		//Creation du chemin du fichier
-		String chemin_fichier = "/home/charlotte/TDM4_NE442/";
+		String chemin_fichier = "/home/charlotte/Documents/";
 		
 		//Attente connexion d'un client
         System.out.println("Attente de la connexion du client ...");
@@ -34,6 +35,7 @@ public class FileServeur {
         
         
         // Un client s'est connecte, le serveur lit le message envoye par le client (sans garantie de lire tout le message)
+        //Le serveur récupère le nom du fichier à transmettre
         byte[] bufR = new byte[2048];
         InputStream is = socketConnexion.getInputStream();
         int lenBufR = is.read(bufR);
@@ -44,12 +46,24 @@ public class FileServeur {
             chemin_fichier += message;
         }
         
-        // Lecture du contenu du fichier serveur.txt
+        // Lecture du contenu du fichier demandé
         FileInputStream fis = new FileInputStream(chemin_fichier);
-        byte[] buf = new byte[10];
+        
+        //Récupère la taille du fichier à transmettre
+        File file = new File(chemin_fichier);
+        long FileSize = file.length();
+        
+        //Création du buffer
+        byte[] buf = new byte[2048];
 
         OutputStream os = socketConnexion.getOutputStream();
         
+        //Envoi de la taille du fichier
+        buf = new String(""+FileSize).getBytes();
+        os.write(buf);
+        System.out.println("Taille du fichier envoyée "+FileSize);
+        
+        //Transfert du fichier
         int len = fis.read(buf);
         while(len!=-1)
         {
