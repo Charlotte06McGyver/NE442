@@ -29,7 +29,7 @@ public class SommeTCP extends Thread{
 		}
 	}
 
-	public void execute() throws IOException{
+	private void execute() throws IOException{
 		
         //Creation de la socket
         Socket socket = new Socket();
@@ -47,19 +47,20 @@ public class SommeTCP extends Thread{
         byte[] bufR = new byte[2048];
         InputStream is = socket.getInputStream();
         int lenBufR = is.read(bufR);
+        String reponse = "";
         while (lenBufR!=-1)
         {
-            String reponse = new String(bufR, 0 , lenBufR );
-            
-            if (reponse.contains("MONTANT=") & reponse.contains("EUROS")) {
-                int indice_debut = reponse.indexOf('=') +1; 
-                int indice_fin = reponse.indexOf('E');
-                montant = Integer.parseInt(reponse.substring(indice_debut, indice_fin));
-                //System.out.println("Indice debut "+indice_debut+"  Indice fin "+indice_fin+"  montant "+montant);
-                socket.close();
-            }
-
+            reponse = reponse + new String(bufR, 0 , lenBufR );
+            lenBufR = is.read(bufR);
         }
+        
+      
+        int indice_debut = reponse.indexOf('=') +1; 
+        int indice_fin = reponse.indexOf('E');
+        montant = Integer.parseInt(reponse.substring(indice_debut, indice_fin));
+        //System.out.println("Indice debut "+indice_debut+"  Indice fin "+indice_fin+"  montant "+montant);
+        socket.close();
+      
         
 	}
 		
