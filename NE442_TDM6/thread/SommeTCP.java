@@ -48,17 +48,16 @@ public class SommeTCP extends Thread{
         InputStream is = socket.getInputStream();
         int lenBufR = is.read(bufR);
         String reponse = "";
-        while (lenBufR!=-1)
+        while (lenBufR!=-1) //marqueur de fin de la socket
         {
             reponse = reponse + new String(bufR, 0 , lenBufR );
             lenBufR = is.read(bufR);
         }
         
-      
+        //Recupere le montant indique dans le message du serveur
         int indice_debut = reponse.indexOf('=') +1; 
         int indice_fin = reponse.indexOf('E');
         montant = Integer.parseInt(reponse.substring(indice_debut, indice_fin));
-        //System.out.println("Indice debut "+indice_debut+"  Indice fin "+indice_fin+"  montant "+montant);
         socket.close();
       
         
@@ -72,6 +71,7 @@ public class SommeTCP extends Thread{
     	int montantMax = 0;
     	int portMax = 0;
     	long sommeMontant = 0;
+    	
     	//Creation d un tableau de threads
     	SommeTCP threadTab[] = new SommeTCP[nbThread];
     	
@@ -79,7 +79,7 @@ public class SommeTCP extends Thread{
     	System.out.println("Debut de la recherche...");
 
     	for (int i = 0; i<nbThread; i++) {
-    		threadTab[i] = new SommeTCP(21000 + i);
+    		threadTab[i] = new SommeTCP(21000 + i); //Creation de tous les threads
     	}
 
     	for (int i = 0; i<nbThread; i++) {	
@@ -92,11 +92,12 @@ public class SommeTCP extends Thread{
     	
     	for (int i = 0; i<nbThread; i++) {
     		
+    		//Calcul du montant maximum et du port associe
     		if (threadTab[i].montant > montantMax) {
     			montantMax = threadTab[i].montant;
     			portMax = threadTab[i].port;    	
     		}
-    		
+    		//Calcul de la somme de tous les montants
     		sommeMontant += threadTab[i].montant;
     	}
     	
